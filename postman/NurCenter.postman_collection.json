@@ -1,0 +1,1159 @@
+{
+  "info": {
+    "_postman_id": "12345678-1234-1234-1234-1234567890ab",
+    "name": "NurCenter API",
+    "description": "Postman collection for NurCenter API with all endpoints and pagination examples",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"username\": \"testuser\", \"email\": \"test@example.com\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"token\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"test@example.com\", \"password\": \"password123\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Protected Endpoints",
+      "item": [
+        {
+          "name": "Todos",
+          "item": [
+            {
+              "name": "Get Todos (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Todos (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/todos?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "todos"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/todos?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "todos"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"title\": \"Test Todo\", \"completed\": false}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Create Todo",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"title\": \"New Todo\", \"completed\": false}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/todos",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "todos"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Todo",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"title\": \"Updated Todo\", \"completed\": true}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/todos/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "todos", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Todo",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/todos/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "todos", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Notes",
+          "item": [
+            {
+              "name": "Get Notes (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Notes (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/notes?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "notes"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/notes?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "notes"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"content\": \"Test Note\"}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Create Note",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"content\": \"New Note\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/notes",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "notes"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Note",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"content\": \"Updated Note\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/notes/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "notes", "1"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Note",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/notes/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "notes", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Habits",
+          "item": [
+            {
+              "name": "Get Habits (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Habits (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/habits?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "habits"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/habits?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "habits"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"name\": \"Morning Run\"}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Create Habit",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"name\": \"Morning Run\", \"frequency\": \"daily\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/habits",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "habits"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Log Habit",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"completed\": true}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/habits/1/log",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "habits", "1", "log"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Goals",
+          "item": [
+            {
+              "name": "Get Goals (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Goals (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/goals?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "goals"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/goals?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "goals"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"title\": \"Learn Go\"}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Create Goal",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"title\": \"Learn Go\", \"deadline\": \"2025-12-31\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/goals",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "goals"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Add Subgoal",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"title\": \"Complete Tutorial\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/goals/1/subgoals",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "goals", "1", "subgoals"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Subgoal Status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"completed\": true}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/subgoals/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "subgoals", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Finances",
+          "item": [
+            {
+              "name": "Get Finances (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Finances (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/finances?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "finances"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/finances?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "finances"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"amount\": 100, \"type\": \"income\"}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Add Finance",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"amount\": 100, \"type\": \"income\", \"description\": \"Salary\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/finances",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "finances"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Reminders",
+          "item": [
+            {
+              "name": "Get Reminders (with Pagination)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});",
+                      "var jsonData = pm.response.json();",
+                      "if (jsonData.next) {",
+                      "    pm.environment.set(\"nextUrl\", jsonData.next);",
+                      "    postman.setNextRequest(\"Get Reminders (with Pagination)\");",
+                      "} else {",
+                      "    pm.environment.set(\"nextUrl\", null);",
+                      "    postman.setNextRequest(null);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reminders?limit=10&offset=0",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "reminders"],
+                  "query": [
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    },
+                    {
+                      "key": "offset",
+                      "value": "0"
+                    }
+                  ]
+                }
+              },
+              "response": [
+                {
+                  "name": "Example Response",
+                  "originalRequest": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrl}}/api/reminders?limit=10&offset=0",
+                      "host": ["{{baseUrl}}"],
+                      "path": ["api", "reminders"],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "10"
+                        },
+                        {
+                          "key": "offset",
+                          "value": "0"
+                        }
+                      ]
+                    }
+                  },
+                  "status": "OK",
+                  "code": 200,
+                  "_postman_previewlanguage": "json",
+                  "header": [
+                    {
+                      "key": "Content-Type",
+                      "value": "application/json"
+                    }
+                  ],
+                  "body": "{\"items\": [{\"id\": 1, \"title\": \"Meeting\"}], \"total\": 1, \"limit\": 10, \"offset\": 0, \"next\": null}"
+                }
+              ]
+            },
+            {
+              "name": "Create Reminder",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"title\": \"Meeting\", \"due_date\": \"2025-04-30\"}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/reminders",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "reminders"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Reminder",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/reminders/1",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "reminders", "1"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Dashboard",
+          "item": [
+            {
+              "name": "Get Dashboard",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/dashboard",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "dashboard"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "AI",
+          "item": [
+            {
+              "name": "Analyze Notes",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{token}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\"notes\": [\"Test Note 1\", \"Test Note 2\"]}"
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/ai/analyze",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["api", "ai", "analyze"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "response": [
+        {
+          "name": "Example Response",
+          "originalRequest": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "_postman_previewlanguage": "json",
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\"status\": \"OK\", \"time\": \"2025-04-23T16:00:00Z\"}"
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
