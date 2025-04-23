@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shopspring/decimal"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/models"
+	"nurcenter/directory/database"
+	"nurcenter/directory/models"
 )
 
 type FinanceRequest struct {

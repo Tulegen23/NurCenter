@@ -10,7 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
-	"nurcenter/internals/models"
+	"nurcenter/directory/models"
 )
 
 func TestCreateReminder(t *testing.T) {

@@ -8,9 +8,9 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/handlers"
-	"nurcenter/internals/middleware"
+	"nurcenter/directory/database"
+	"nurcenter/directory/handlers"
+	"nurcenter/directory/middleware"
 )
 
 func main() {

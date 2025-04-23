@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/models"
+	"nurcenter/directory/database"
+	"nurcenter/directory/models"
 )
 
 type DashboardResponse struct {

@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/models"
+	"nurcenter/directory/database"
+	"nurcenter/directory/models"
 	"os"
 )
 

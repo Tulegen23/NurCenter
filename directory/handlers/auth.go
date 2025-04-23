@@ -10,8 +10,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"os"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/models"
+	"nurcenter/directory/database"
+	"nurcenter/directory/models"
 )
 
 type AuthRequest struct {

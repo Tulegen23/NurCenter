@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"nurcenter/internals/database"
-	"nurcenter/internals/models"
+	"nurcenter/directory/database"
+	"nurcenter/directory/models"
 )
 
 func AnalyzeNotes(c *gin.Context) {

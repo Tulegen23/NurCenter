@@ -11,7 +11,7 @@ import (
 	_ "gorm.io/driver/sqlite"
 	_ "gorm.io/gorm"
 
-	_ "nurcenter/internals/database"
+	_ "nurcenter/directory/database"
 )
 
 func TestAnalyzeNotes(t *testing.T) {
