@@ -1,0 +1,1 @@
+CREATE TABLE finances ( id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, amount DECIMAL(10,2) NOT NULL, description VARCHAR(200), created_at TIMESTAMPTZ DEFAULT NOW() );

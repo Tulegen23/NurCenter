@@ -1,0 +1,1 @@
+CREATE TABLE notes ( id SERIAL PRIMARY KEY, user_id INTEGER NOT NULL, title VARCHAR(200) NOT NULL, content TEXT, category VARCHAR(50), created_at TIMESTAMPTZ DEFAULT NOW() );

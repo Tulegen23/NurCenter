@@ -1,1 +1,0 @@
-DROP TABLE habit_logs;

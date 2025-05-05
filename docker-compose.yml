@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  user-service:
+    build:
+      context: ./user-service
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      - USER_DB_HOST=user-db
+      - USER_DB_PORT=5432
+      - USER_DB_USER=postgres
+      - USER_DB_PASSWORD=nurbol23
+      - USER_DB_NAME=nurcenter_users
+      - JWT_SECRET=dXj9kPqL2mWvY8rT3zQhN5bV7cF4gJ0xA1eK9iU6oM=
+    depends_on:
+      - user-db
+    networks:
+      - nurcenter-network
+
+  productivity-service:
+    build:
+      context: ./productivity-service
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PRODUCTIVITY_DB_HOST=productivity-db
+      - PRODUCTIVITY_DB_PORT=5432
+      - PRODUCTIVITY_DB_USER=postgres
+      - PRODUCTIVITY_DB_PASSWORD=nurbol23
+      - PRODUCTIVITY_DB_NAME=nurcenter_productivity
+      - JWT_SECRET=dXj9kPqL2mWvY8rT3zQhN5bV7cF4gJ0xA1eK9iU6oM=
+      - USER_SERVICE_URL=http://user-service:8081
+    depends_on:
+      - productivity-db
+      - user-service
+    networks:
+      - nurcenter-network
+
+  user-db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=nurbol23
+      - POSTGRES_DB=nurcenter_users
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    networks:
+      - nurcenter-network
+
+  productivity-db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=nurbol23
+      - POSTGRES_DB=nurcenter_productivity
+    volumes:
+      - productivity-db-data:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5434:5432"
+    networks:
+      - nurcenter-network
+
+volumes:
+  user-db-data:
+  productivity-db-data:
+
+networks:
+  nurcenter-network:
+    driver: bridge
