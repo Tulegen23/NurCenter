@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"nurcenter/productivity-service/config"
 	"nurcenter/productivity-service/database"
@@ -13,6 +14,7 @@ func main() {
 	db := database.InitDB(cfg)
 
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.Use(middleware.LoggingMiddleware())
 
 	protected := r.Group("/").Use(middleware.AuthMiddleware())

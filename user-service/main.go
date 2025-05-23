@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"nurcenter/user-service/config"
 	"nurcenter/user-service/database"
@@ -13,6 +14,10 @@ func main() {
 	db := database.InitDB(cfg)
 
 	r := gin.Default()
+
+	// ✅ Добавляем CORS middleware
+	r.Use(cors.Default())
+
 	r.Use(middleware.LoggingMiddleware())
 
 	r.POST("/register", func(c *gin.Context) { handlers.Register(c, db) })
@@ -20,5 +25,4 @@ func main() {
 	r.GET("/users/:id", func(c *gin.Context) { handlers.GetUserByID(c, db) })
 
 	r.Run(":8081")
-
 }
