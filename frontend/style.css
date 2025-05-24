@@ -1,44 +1,212 @@
+/* Общий стиль для всей страницы */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url('images/fon.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-attachment: fixed;
 }
+
+/* Контейнер формы */
 .container {
-    background-color: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    width: 300px;
-    text-align: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 248, 255, 0.6));
+  backdrop-filter: blur(8px);
+  padding: 40px 50px;
+  border-radius: 20px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  width: 360px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease-out forwards;
 }
+
+/* Анимация появления */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ховер эффект */
+.container:hover {
+  transform: scale(1.03);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* Заголовок */
+h1 {
+  margin-bottom: 20px;
+  color: #1e3a8a;
+  font-size: 28px;
+}
+input, button {
+  box-sizing: border-box;
+}
+
+/* Поля ввода */
 input {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 16px;
 }
+
+input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+  outline: none;
+}
+
+/* Кнопка входа */
 button {
-    padding: 8px 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+  width: 100%;
+  padding: 18px;
+  background-color: #1c2436;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease, transform 0.2s;
 }
+
 button:hover {
-    background-color: #0056b3;
+  background-color: #1e40af;
+  transform: scale(1.02);
 }
-ul {
-    list-style: none;
-    padding: 0;
+
+/* Ссылка на регистрацию */
+a {
+  color: #1d4ed8;
+  text-decoration: none;
+  display: block;
+  margin-top: 15px;
+  font-size: 14px;
 }
-li {
-    padding: 6px;
-    background: #eee;
-    margin-top: 4px;
-    display: flex;
-    justify-content: space-between;
+
+a:hover {
+  text-decoration: underline;
 }
+
+/* Сообщение об ошибке */
+#message {
+  margin-top: 10px;
+  color: red;
+  font-size: 14px;
+}
+.tasks-title {
+  font-size: 26px;
+  color: #1d4ed8;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.tasks-title span {
+  font-size: 0.8em;
+  vertical-align: 2px
+}
+.register-title {
+  font-size: 34px;
+  font-weight: 700;
+  color: #1e40af;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.register-title span {
+  font-size: 0.9em;
+  position: relative;
+  top: -3px;
+}
+/* Навигационная панель */
+.navbar {
+  position: fixed;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 55px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(240, 248, 255, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  gap: 20px; /* добавил отступ между элементами */
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-shrink: 0; /* чтобы не сжиматься */
+}
+
+.logo {
+  color: #3b82f6;
+  font-weight: 700;
+  font-size: 24px;
+  user-select: none;
+}
+
+.nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  color: #2f375b;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.nav-menu li a:hover {
+  color: #3b82f6;
+}
+
+.logout-btn {
+  background-color: #1c2436;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s;
+  flex-shrink: 0; /* чтобы кнопка не растягивалась */
+  width: auto;    /* убрать растяжение */
+  max-width: none;
+}
+
+.logout-btn:hover {
+  background-color: #1e40af;
+  transform: scale(1.05);
+}
+
+/* Отступ контейнера от навигации */
+.container {
+  margin-top: 100px; /* чтобы контейнер не скрывался под навбаром */
+}
+
+/* Можно при необходимости подправить ширину и центрирование */

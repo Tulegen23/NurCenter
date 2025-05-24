@@ -1,83 +1,74 @@
-const USER_API = "http://localhost:8081";
-const PRODUCTIVITY_API = "http://localhost:8080";
-
-function login() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    fetch(`${USER_API}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    })
-        .then(res => res.json())
-        .then(data => {
-            localStorage.setItem("token", data.token);
-            window.location.href = "dashboard.html";
-        })
-        .catch(() => alert("Login failed"));
+const token = localStorage.getItem("token");
+if (!token) {
+  window.location.href = "index.html"; // перенаправление, если токена нет
 }
 
-function register() {
-    const email = document.getElementById("regEmail").value;
-    const password = document.getElementById("regPassword").value;
-    fetch(`${USER_API}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-    })
-        .then(res => res.json())
-        .then(() => alert("Registered! Now login."))
-        .catch(() => alert("Register failed"));
+async function fetchTodos() {
+  try {
+    const response = await fetch("http://localhost:8080/todos", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка загрузки: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    // Если у API структура { todos: [...] }, то использовать data.todos
+    const todos = data.todos || data;
+
+    const list = document.getElementById("todoList");
+    list.innerHTML = "";
+
+    todos.forEach((todo) => {
+      const li = document.createElement("li");
+      li.textContent = todo.title + (todo.isDone ? " ✅" : "");
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error(err);
+    alert("Не удалось загрузить задачи. Попробуйте позже.");
+  }
 }
 
-function addTodo() {
-    const text = document.getElementById("newTodo").value;
-    fetch(`${PRODUCTIVITY_API}/todos`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify({ text })
-    }).then(() => loadTodos());
-}
+async function addTodo() {
+  const titleInput = document.getElementById("newTodo");
+  const title = titleInput.value.trim();
 
-function loadTodos() {
-    fetch(`${PRODUCTIVITY_API}/todos`, {
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-    })
-        .then(res => res.json())
-        .then(todos => {
-            const list = document.getElementById("todoList");
-            list.innerHTML = "";
-            todos.forEach(todo => {
-                const li = document.createElement("li");
-                li.textContent = todo.text;
-                const btn = document.createElement("button");
-                btn.textContent = "Delete";
-                btn.onclick = () => deleteTodo(todo.ID);
-                li.appendChild(btn);
-                list.appendChild(li);
-            });
-        });
-}
+  if (!title) {
+    alert("Введите название задачи");
+    return;
+  }
 
-function deleteTodo(id) {
-    fetch(`${PRODUCTIVITY_API}/todos/${id}`, {
-        method: "DELETE",
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-    }).then(() => loadTodos());
+  try {
+    const response = await fetch("http://localhost:8080/todos", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ title }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Ошибка добавления: ${response.status}`);
+    }
+
+    titleInput.value = "";
+    await fetchTodos();
+  } catch (err) {
+    console.error(err);
+    alert("Не удалось добавить задачу. Попробуйте позже.");
+  }
 }
 
 function logout() {
-    localStorage.removeItem("token");
-    window.location.href = "index.html";
+  localStorage.removeItem("token");
+  window.location.href = "index.html";
 }
 
-if (window.location.pathname.includes("dashboard.html")) {
-    loadTodos();
-}
+document.getElementById("addBtn").addEventListener("click", addTodo);
+window.addEventListener("load", fetchTodos);

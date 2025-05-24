@@ -1,19 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>NurCenter - Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
+<nav class="navbar">
+    <div class="nav-left">
+        <div class="logo">NurCenter</div>
+        <ul class="nav-menu">
+            <li><a href="dashboard.html">Главная</a></li>
+            <li><a href="tasks.html">Задачи</a></li>
+            <li><a href="#">Аналитика</a></li>
+            <li><a href="#">Профиль</a></li>
+        </ul>
+    </div>
+    <button class="logout-btn" onclick="logout()">Выйти</button>
+</nav>
+
 <div class="container">
-    <h2>Your Todos</h2>
-    <input type="text" id="newTodo" placeholder="New Task">
-    <button onclick="addTodo()">Add</button>
+    <h2 class="tasks-title"><span>📝</span> Новая задача</h2>
+    <input type="text" id="newTodo" placeholder="Новая задача" />
+    <button onclick="addTodo()">Добавить</button>
     <ul id="todoList"></ul>
-    <button onclick="logout()">Logout</button>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
